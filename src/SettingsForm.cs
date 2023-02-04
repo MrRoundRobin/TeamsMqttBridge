@@ -1,5 +1,6 @@
 namespace ro.TeamsMqttBridge;
 
+using MQTTnet.Client;
 using static Properties.Settings;
 
 public partial class SettingsForm : Form
@@ -115,7 +116,9 @@ public partial class SettingsForm : Form
     }
 
     private void SettingsForm_Load(object sender, EventArgs e)
-        => UpdateStatus();
+    {
+        UpdateStatus();
+    }
 
     private void UpdateStatus()
     {
@@ -135,6 +138,8 @@ public partial class SettingsForm : Form
             teamsToken.Text = Guid.Empty.ToString();
         }
 
+        autodiscover.Checked = Default.Autodiscover;
+
         mqttServer.Text = Default.MqttUrl.ToString();
 
         mqttUsername.Enabled = useAuthentication.Checked;
@@ -143,8 +148,14 @@ public partial class SettingsForm : Form
         teamsStatus.Text = Program.TeamsClient is not null && Program.TeamsClient.IsConnected ? "Connected" : "Not Connected";
         teamsStatus.ForeColor = Program.TeamsClient is not null && Program.TeamsClient.IsConnected ? Color.Green : Color.Red;
 
-        mqttStatus.Text = Program.MqttClient is not null && Program.MqttClient.IsConnected ? "Connected" : "Not Connected";
-        mqttStatus.ForeColor = Program.MqttClient is not null && Program.MqttClient.IsConnected ? Color.Green : Color.Red;
+        UpdateMqttStatus(Program.MqttClient is not null && Program.MqttClient.IsConnected);
+    }
+
+    private void UpdateMqttStatus(bool status)
+    {
+        mqttStatus.Text = status ? "Connected" : "Not Connected";
+        mqttStatus.ForeColor = status ? Color.Green : Color.Red;
+
     }
 
     private void reconnect_Click(object sender, EventArgs e)

@@ -9,7 +9,7 @@ internal class Daemon : ApplicationContext
     {
         icon = new()
         {
-            Icon = new Icon("Home_Assistant.ico"),
+            Icon = Resources.Icon,
             Visible = true,
             Text = "Home Assistant Bridge"
         };

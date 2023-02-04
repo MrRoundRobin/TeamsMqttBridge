@@ -221,7 +221,7 @@ partial class SettingsForm
         Controls.Add(teamsTokenLabel);
         Controls.Add(useAuthentication);
         Controls.Add(save);
-        Icon = (Icon)resources.GetObject("$this.Icon");
+        Icon = Resources.Icon;
         MaximizeBox = false;
         MinimizeBox = false;
         Name = "SettingsForm";
