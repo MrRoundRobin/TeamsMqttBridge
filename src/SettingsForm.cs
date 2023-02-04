@@ -1,4 +1,4 @@
-namespace ms.robin.TeamsMqttBridge;
+namespace ro.TeamsMqttBridge;
 
 using static Properties.Settings;
 

@@ -6,10 +6,11 @@
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
-    <RootNamespace>ms.robin.TeamsMqttBridge</RootNamespace>
+    <RootNamespace>ro.TeamsMqttBridge</RootNamespace>
     <IncludeSymbols>True</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+    <ApplicationIcon>Home_Assistant.ico</ApplicationIcon>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -21,9 +22,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="Home_Assistant.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Macross.Json.Extensions" Version="3.0.0" />
     <PackageReference Include="MQTTnet.Extensions.ManagedClient" Version="4.1.4.563" />
-    <PackageReference Include="TeamsLocalApi" Version="1.0.0" />
+    <PackageReference Include="Ro.TeamsLocalApi" Version="0.1.0" />
   </ItemGroup>
 
   <ItemGroup>

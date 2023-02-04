@@ -1,4 +1,4 @@
-﻿namespace ms.robin.TeamsMqttBridge.HomeAssistant;
+﻿namespace ro.TeamsMqttBridge.HomeAssistant;
 
 internal class Device
 {

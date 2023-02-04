@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ms.robin.TeamsMqttBridge.Properties {
+namespace ro.TeamsMqttBridge.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

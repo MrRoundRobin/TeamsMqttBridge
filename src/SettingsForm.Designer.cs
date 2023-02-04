@@ -1,4 +1,4 @@
-﻿namespace ms.robin.TeamsMqttBridge;
+﻿namespace ro.TeamsMqttBridge;
 
 partial class SettingsForm
 {
@@ -49,9 +49,9 @@ partial class SettingsForm
         exit = new Button();
         statusStrip.SuspendLayout();
         SuspendLayout();
-        // 
+        //
         // save
-        // 
+        //
         save.Location = new Point(292, 295);
         save.Name = "save";
         save.Size = new Size(112, 34);
@@ -59,9 +59,9 @@ partial class SettingsForm
         save.Text = "Save";
         save.UseVisualStyleBackColor = true;
         save.Click += Save;
-        // 
+        //
         // useAuthentication
-        // 
+        //
         useAuthentication.AutoSize = true;
         useAuthentication.Location = new Point(12, 136);
         useAuthentication.Name = "useAuthentication";
@@ -70,75 +70,75 @@ partial class SettingsForm
         useAuthentication.Text = "Use Authentication";
         useAuthentication.UseVisualStyleBackColor = true;
         useAuthentication.CheckedChanged += SelectAuthentication;
-        // 
+        //
         // teamsTokenLabel
-        // 
+        //
         teamsTokenLabel.AutoSize = true;
         teamsTokenLabel.Location = new Point(12, 9);
         teamsTokenLabel.Name = "teamsTokenLabel";
         teamsTokenLabel.Size = new Size(148, 25);
         teamsTokenLabel.TabIndex = 2;
         teamsTokenLabel.Text = "Teams API Token:";
-        // 
+        //
         // teamsToken
-        // 
+        //
         teamsToken.Location = new Point(12, 37);
         teamsToken.Name = "teamsToken";
         teamsToken.Size = new Size(392, 31);
         teamsToken.TabIndex = 3;
         teamsToken.UseSystemPasswordChar = true;
-        // 
+        //
         // mqttServer
-        // 
+        //
         mqttServer.Location = new Point(12, 99);
         mqttServer.Name = "mqttServer";
         mqttServer.Size = new Size(392, 31);
         mqttServer.TabIndex = 5;
-        // 
+        //
         // mqttServerLabel
-        // 
+        //
         mqttServerLabel.AutoSize = true;
         mqttServerLabel.Location = new Point(12, 71);
         mqttServerLabel.Name = "mqttServerLabel";
         mqttServerLabel.Size = new Size(153, 25);
         mqttServerLabel.TabIndex = 4;
         mqttServerLabel.Text = "MQTT Server URL:";
-        // 
+        //
         // mqttUsername
-        // 
+        //
         mqttUsername.Location = new Point(12, 196);
         mqttUsername.Name = "mqttUsername";
         mqttUsername.Size = new Size(392, 31);
         mqttUsername.TabIndex = 7;
-        // 
+        //
         // mqttUsernameLabel
-        // 
+        //
         mqttUsernameLabel.AutoSize = true;
         mqttUsernameLabel.Location = new Point(12, 168);
         mqttUsernameLabel.Name = "mqttUsernameLabel";
         mqttUsernameLabel.Size = new Size(147, 25);
         mqttUsernameLabel.TabIndex = 6;
         mqttUsernameLabel.Text = "MQTT Username:";
-        // 
+        //
         // mqttPassword
-        // 
+        //
         mqttPassword.Location = new Point(12, 258);
         mqttPassword.Name = "mqttPassword";
         mqttPassword.Size = new Size(392, 31);
         mqttPassword.TabIndex = 9;
         mqttPassword.UseSystemPasswordChar = true;
-        // 
+        //
         // mqttPasswordLabel
-        // 
+        //
         mqttPasswordLabel.AutoSize = true;
         mqttPasswordLabel.Location = new Point(12, 230);
         mqttPasswordLabel.Name = "mqttPasswordLabel";
         mqttPasswordLabel.Size = new Size(143, 25);
         mqttPasswordLabel.TabIndex = 8;
         mqttPasswordLabel.Text = "MQTT Password:";
-        // 
+        //
         // statusStrip
-        // 
+        //
         statusStrip.ImageScalingSize = new Size(24, 24);
         statusStrip.Items.AddRange(new ToolStripItem[] { teamsStatusLabel, teamsStatus, mqttStatusLabel, mqttStatus });
         statusStrip.Location = new Point(0, 339);
@@ -146,33 +146,33 @@ partial class SettingsForm
         statusStrip.Size = new Size(416, 32);
         statusStrip.TabIndex = 10;
         statusStrip.Text = "Status";
-        // 
+        //
         // teamsStatusLabel
-        // 
+        //
         teamsStatusLabel.Name = "teamsStatusLabel";
         teamsStatusLabel.Size = new Size(65, 25);
         teamsStatusLabel.Text = "Teams:";
-        // 
+        //
         // teamsStatus
-        // 
+        //
         teamsStatus.Name = "teamsStatus";
         teamsStatus.Size = new Size(132, 25);
         teamsStatus.Text = "Not Connected";
-        // 
+        //
         // mqttStatusLabel
-        // 
+        //
         mqttStatusLabel.Name = "mqttStatusLabel";
         mqttStatusLabel.Size = new Size(63, 25);
         mqttStatusLabel.Text = "MQTT:";
-        // 
+        //
         // mqttStatus
-        // 
+        //
         mqttStatus.Name = "mqttStatus";
         mqttStatus.Size = new Size(132, 25);
         mqttStatus.Text = "Not Connected";
-        // 
+        //
         // autodiscover
-        // 
+        //
         autodiscover.AutoSize = true;
         autodiscover.Location = new Point(205, 136);
         autodiscover.Name = "autodiscover";
@@ -180,9 +180,9 @@ partial class SettingsForm
         autodiscover.TabIndex = 11;
         autodiscover.Text = "Enable Autodiscover";
         autodiscover.UseVisualStyleBackColor = true;
-        // 
+        //
         // reconnect
-        // 
+        //
         reconnect.Location = new Point(174, 295);
         reconnect.Name = "reconnect";
         reconnect.Size = new Size(112, 34);
@@ -190,9 +190,9 @@ partial class SettingsForm
         reconnect.Text = "Reconnect";
         reconnect.UseVisualStyleBackColor = true;
         reconnect.Click += reconnect_Click;
-        // 
+        //
         // exit
-        // 
+        //
         exit.Location = new Point(12, 295);
         exit.Name = "exit";
         exit.Size = new Size(112, 34);
@@ -200,9 +200,9 @@ partial class SettingsForm
         exit.Text = "Exit";
         exit.UseVisualStyleBackColor = true;
         exit.Click += exit_Click;
-        // 
+        //
         // SettingsForm
-        // 
+        //
         AcceptButton = save;
         AutoScaleDimensions = new SizeF(10F, 25F);
         AutoScaleMode = AutoScaleMode.Font;

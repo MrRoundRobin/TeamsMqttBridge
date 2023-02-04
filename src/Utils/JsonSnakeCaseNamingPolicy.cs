@@ -4,7 +4,10 @@
 
 // https://github.com/dotnet/corefx/blob/c54ddc76da61c50576eff92e3add9caf7107f8af/src/System.Text.Json/src/System/Text/Json/Serialization/JsonSnakeCaseNamingPolicy.cs
 
-namespace System.Text.Json
+using System.Text;
+using System.Text.Json;
+
+namespace ro.TeamsMqttBridge.Utils
 {
     internal sealed class JsonSnakeCaseNamingPolicy : JsonNamingPolicy
     {
@@ -42,7 +45,7 @@ namespace System.Text.Json
                     switch (state)
                     {
                         case SnakeCaseState.Upper:
-                            bool hasNext = (i + 1 < nameSpan.Length);
+                            bool hasNext = i + 1 < nameSpan.Length;
                             if (i > 0 && hasNext)
                             {
                                 char nextChar = nameSpan[i + 1];

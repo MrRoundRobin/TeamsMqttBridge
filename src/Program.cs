@@ -1,9 +1,10 @@
-namespace ms.robin.TeamsMqttBridge;
+namespace ro.TeamsMqttBridge;
 
 using MQTTnet;
 using MQTTnet.Client;
 using MQTTnet.Extensions.ManagedClient;
-using ms.robin.TeamsMqttBridge.HomeAssistant;
+using ro.TeamsMqttBridge.HomeAssistant;
+using ro.TeamsMqttBridge.Utils;
 using System.Text;
 using System.Text.Json;
 
@@ -12,7 +13,7 @@ using static Properties.Settings;
 internal static class Program
 {
     internal static TeamsLocalApi.Client? TeamsClient { get; set; }
-    internal static IManagedMqttClient?   MqttClient  { get; set; }
+    internal static IManagedMqttClient? MqttClient { get; set; }
 
     /// <summary>
     ///  The main entry point for the application.
@@ -106,7 +107,7 @@ internal static class Program
                 Model = "Teams HA Link",
                 Manufacturer = "MrRoundRobin",
             };
-            
+
             await MqttClient.EnqueueAsync($"homeassistant/switch/{Default.NodeName}/mute/config", JsonSerializer.Serialize(new Discovery()
             {
                 Name = "Mute",
@@ -305,42 +306,42 @@ internal static class Program
             return;
 
         if (propertyName is null || propertyName == nameof(TeamsClient.IsMuted))
-            await MqttClient.EnqueueAsync($"teams/{Default.NodeName}/state/isMuted",              TeamsClient.IsMuted             ? "ON" : "OFF", retain: true);
+            await MqttClient.EnqueueAsync($"teams/{Default.NodeName}/state/isMuted", TeamsClient.IsMuted ? "ON" : "OFF", retain: true);
 
         if (propertyName is null || propertyName == nameof(TeamsClient.IsCameraOn))
-            await MqttClient.EnqueueAsync($"teams/{Default.NodeName}/state/isCameraOn",           TeamsClient.IsCameraOn          ? "ON" : "OFF", retain: true);
+            await MqttClient.EnqueueAsync($"teams/{Default.NodeName}/state/isCameraOn", TeamsClient.IsCameraOn ? "ON" : "OFF", retain: true);
 
         if (propertyName is null || propertyName == nameof(TeamsClient.IsHandRaised))
-            await MqttClient.EnqueueAsync($"teams/{Default.NodeName}/state/isHandRaised",         TeamsClient.IsHandRaised        ? "ON" : "OFF", retain: true);
+            await MqttClient.EnqueueAsync($"teams/{Default.NodeName}/state/isHandRaised", TeamsClient.IsHandRaised ? "ON" : "OFF", retain: true);
 
         if (propertyName is null || propertyName == nameof(TeamsClient.IsInMeeting))
-            await MqttClient.EnqueueAsync($"teams/{Default.NodeName}/state/isInMeeting",          TeamsClient.IsInMeeting         ? "ON" : "OFF", retain: true);
+            await MqttClient.EnqueueAsync($"teams/{Default.NodeName}/state/isInMeeting", TeamsClient.IsInMeeting ? "ON" : "OFF", retain: true);
 
         if (propertyName is null || propertyName == nameof(TeamsClient.IsRecordingOn))
-            await MqttClient.EnqueueAsync($"teams/{Default.NodeName}/state/isRecordingOn",        TeamsClient.IsRecordingOn       ? "ON" : "OFF", retain: true);
+            await MqttClient.EnqueueAsync($"teams/{Default.NodeName}/state/isRecordingOn", TeamsClient.IsRecordingOn ? "ON" : "OFF", retain: true);
 
         if (propertyName is null || propertyName == nameof(TeamsClient.IsBackgroundBlurred))
-            await MqttClient.EnqueueAsync($"teams/{Default.NodeName}/state/isBackgroundBlurred",  TeamsClient.IsBackgroundBlurred ? "ON" : "OFF", retain: true);
+            await MqttClient.EnqueueAsync($"teams/{Default.NodeName}/state/isBackgroundBlurred", TeamsClient.IsBackgroundBlurred ? "ON" : "OFF", retain: true);
 
         if (propertyName is null || propertyName == nameof(TeamsClient.CanToggleMute))
-            await MqttClient.EnqueueAsync($"teams/{Default.NodeName}/permission/canToggleMute",   TeamsClient.CanToggleMute       ? "ON" : "OFF", retain: true);
+            await MqttClient.EnqueueAsync($"teams/{Default.NodeName}/permission/canToggleMute", TeamsClient.CanToggleMute ? "ON" : "OFF", retain: true);
 
         if (propertyName is null || propertyName == nameof(TeamsClient.CanToggleVideo))
-            await MqttClient.EnqueueAsync($"teams/{Default.NodeName}/permission/canToggleVideo",  TeamsClient.CanToggleVideo      ? "ON" : "OFF", retain: true);
+            await MqttClient.EnqueueAsync($"teams/{Default.NodeName}/permission/canToggleVideo", TeamsClient.CanToggleVideo ? "ON" : "OFF", retain: true);
 
         if (propertyName is null || propertyName == nameof(TeamsClient.CanToggleHand))
-            await MqttClient.EnqueueAsync($"teams/{Default.NodeName}/permission/canToggleHand",   TeamsClient.CanToggleHand       ? "ON" : "OFF", retain: true);
+            await MqttClient.EnqueueAsync($"teams/{Default.NodeName}/permission/canToggleHand", TeamsClient.CanToggleHand ? "ON" : "OFF", retain: true);
 
         if (propertyName is null || propertyName == nameof(TeamsClient.CanToggleBlur))
-            await MqttClient.EnqueueAsync($"teams/{Default.NodeName}/permission/canToggleBlur",   TeamsClient.CanToggleBlur       ? "ON" : "OFF", retain: true);
+            await MqttClient.EnqueueAsync($"teams/{Default.NodeName}/permission/canToggleBlur", TeamsClient.CanToggleBlur ? "ON" : "OFF", retain: true);
 
         if (propertyName is null || propertyName == nameof(TeamsClient.CanToggleRecord))
-            await MqttClient.EnqueueAsync($"teams/{Default.NodeName}/permission/canToggleRecord", TeamsClient.CanToggleRecord     ? "ON" : "OFF", retain: true);
+            await MqttClient.EnqueueAsync($"teams/{Default.NodeName}/permission/canToggleRecord", TeamsClient.CanToggleRecord ? "ON" : "OFF", retain: true);
 
         if (propertyName is null || propertyName == nameof(TeamsClient.CanLeave))
-            await MqttClient.EnqueueAsync($"teams/{Default.NodeName}/permission/canLeave",        TeamsClient.CanLeave            ? "ON" : "OFF", retain: true);
+            await MqttClient.EnqueueAsync($"teams/{Default.NodeName}/permission/canLeave", TeamsClient.CanLeave ? "ON" : "OFF", retain: true);
 
         if (propertyName is null || propertyName == nameof(TeamsClient.CanReact))
-            await MqttClient.EnqueueAsync($"teams/{Default.NodeName}/permission/canReact",        TeamsClient.CanReact            ? "ON" : "OFF", retain: true);
+            await MqttClient.EnqueueAsync($"teams/{Default.NodeName}/permission/canReact", TeamsClient.CanReact ? "ON" : "OFF", retain: true);
     }
 }
