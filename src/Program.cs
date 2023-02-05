@@ -1,10 +1,12 @@
-namespace ro.TeamsMqttBridge;
+namespace Ro.Teams.MqttBridge;
 
 using MQTTnet;
 using MQTTnet.Client;
 using MQTTnet.Extensions.ManagedClient;
-using ro.TeamsMqttBridge.HomeAssistant;
-using ro.TeamsMqttBridge.Utils;
+using MQTTnet.Server;
+using Ro.Teams.MqttBridge.HomeAssistant;
+using Ro.Teams.MqttBridge.Utils;
+using System.Reflection;
 using System.Text;
 using System.Text.Json;
 
@@ -12,8 +14,13 @@ using static Properties.Settings;
 
 internal static class Program
 {
-    internal static TeamsLocalApi.Client? TeamsClient { get; set; }
+    internal static ro.TeamsLocalApi.Client? TeamsClient { get; set; }
     internal static IManagedMqttClient? MqttClient { get; set; }
+
+    internal static event EventHandler? MqttConnected;
+    internal static event EventHandler? MqttDisconnected;
+    internal static event EventHandler? TeamsConnected;
+    internal static event EventHandler? TeamsDisconnected;
 
     /// <summary>
     ///  The main entry point for the application.
@@ -21,6 +28,23 @@ internal static class Program
     [STAThread]
     static void Main()
     {
+        if (!Version.TryParse(Default.SettingsVersion, out Version? settingsVersion) || settingsVersion < Assembly.GetExecutingAssembly().GetName().Version)
+        {
+            Default.Upgrade();
+            
+            if (settingsVersion < new Version("0.2.0.0"))
+            {
+                if (!string.IsNullOrEmpty(Default.TeamsToken))
+                    Default.TeamsToken = Default.TeamsToken.Encrypt();
+
+                if (!string.IsNullOrEmpty(Default.MqttPassword))
+                    Default.MqttPassword = Default.MqttPassword.Encrypt();
+            }
+
+            Default.SettingsVersion = Assembly.GetExecutingAssembly().GetName().Version?.ToString();
+            Default.Save();
+        }
+
         TryReconnectTeams();
         TryReconnectMqtt();
         ApplicationConfiguration.Initialize();
@@ -35,8 +59,11 @@ internal static class Program
         if (string.IsNullOrEmpty(Default.TeamsToken))
             return;
 
-        TeamsClient = new(Default.TeamsToken, false);
+        TeamsClient = new(Default.TeamsToken.Decrypt(), false);
         TeamsClient.PropertyChanged += (_, e) => SendUpdate(e.PropertyName);
+        TeamsClient.Connected += (o,e) => TeamsConnected?.Invoke(o, e);
+        TeamsClient.Disconnected += (o, e) => TeamsDisconnected?.Invoke(o, e);
+
         TeamsClient.Connect();
         TeamsClient.UpdateState();
     }
@@ -77,7 +104,7 @@ internal static class Program
 
         if (!string.IsNullOrWhiteSpace(Default.MqttUsername) && !string.IsNullOrEmpty(Default.MqttPassword))
         {
-            clientOptions = clientOptions.WithCredentials(Default.MqttUsername, Default.MqttPassword);
+            clientOptions = clientOptions.WithCredentials(Default.MqttUsername, Default.MqttPassword.Decrypt());
         }
 
         var managedClientOptions = new ManagedMqttClientOptionsBuilder()
@@ -85,6 +112,9 @@ internal static class Program
                 .Build();
 
         MqttClient = new MqttFactory().CreateManagedMqttClient();
+
+        MqttClient.ConnectedAsync    += (e) => { MqttConnected?.Invoke(MqttClient, EventArgs.Empty); return Task.CompletedTask; };
+        MqttClient.DisconnectedAsync += (e) => { MqttDisconnected?.Invoke(MqttClient, EventArgs.Empty); return Task.CompletedTask; };
 
         await MqttClient.StartAsync(managedClientOptions);
 
@@ -275,27 +305,27 @@ internal static class Program
                 break;
 
             case "leaveCall":
-                TeamsClient.LeaveCall();
+                _ = TeamsClient.LeaveCall();
                 break;
 
             case "reactApplause":
-                TeamsClient.ReactApplause();
+                _ = TeamsClient.ReactApplause();
                 break;
 
             case "reactLaugh":
-                TeamsClient.ReactLaugh();
+                _ = TeamsClient.ReactLaugh();
                 break;
 
             case "reactLike":
-                TeamsClient.ReactLike();
+                _ = TeamsClient.ReactLike();
                 break;
 
             case "reactLove":
-                TeamsClient.ReactLove();
+                _ = TeamsClient.ReactLove();
                 break;
 
             case "reactWow":
-                TeamsClient.ReactLove();
+                _ = TeamsClient.ReactLove();
                 break;
         }
     }

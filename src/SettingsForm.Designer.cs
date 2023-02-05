@@ -1,4 +1,4 @@
-﻿namespace ro.TeamsMqttBridge;
+﻿namespace Ro.Teams.MqttBridge;
 
 partial class SettingsForm
 {

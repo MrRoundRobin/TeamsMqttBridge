@@ -7,80 +7,79 @@
 using System.Text;
 using System.Text.Json;
 
-namespace ro.TeamsMqttBridge.Utils
+namespace Ro.Teams.MqttBridge.Utils;
+
+internal sealed class JsonSnakeCaseNamingPolicy : JsonNamingPolicy
 {
-    internal sealed class JsonSnakeCaseNamingPolicy : JsonNamingPolicy
+    internal enum SnakeCaseState
     {
-        internal enum SnakeCaseState
+        Start,
+        Lower,
+        Upper,
+        NewWord
+    }
+
+    public override string ConvertName(string name)
+    {
+        if (string.IsNullOrEmpty(name))
         {
-            Start,
-            Lower,
-            Upper,
-            NewWord
+            return name;
         }
 
-        public override string ConvertName(string name)
+        var sb = new StringBuilder();
+        var state = SnakeCaseState.Start;
+
+        var nameSpan = name.AsSpan();
+
+        for (int i = 0; i < nameSpan.Length; i++)
         {
-            if (string.IsNullOrEmpty(name))
+            if (nameSpan[i] == ' ')
             {
-                return name;
+                if (state != SnakeCaseState.Start)
+                {
+                    state = SnakeCaseState.NewWord;
+                }
             }
-
-            var sb = new StringBuilder();
-            var state = SnakeCaseState.Start;
-
-            var nameSpan = name.AsSpan();
-
-            for (int i = 0; i < nameSpan.Length; i++)
+            else if (char.IsUpper(nameSpan[i]))
             {
-                if (nameSpan[i] == ' ')
+                switch (state)
                 {
-                    if (state != SnakeCaseState.Start)
-                    {
-                        state = SnakeCaseState.NewWord;
-                    }
-                }
-                else if (char.IsUpper(nameSpan[i]))
-                {
-                    switch (state)
-                    {
-                        case SnakeCaseState.Upper:
-                            bool hasNext = i + 1 < nameSpan.Length;
-                            if (i > 0 && hasNext)
+                    case SnakeCaseState.Upper:
+                        bool hasNext = i + 1 < nameSpan.Length;
+                        if (i > 0 && hasNext)
+                        {
+                            char nextChar = nameSpan[i + 1];
+                            if (!char.IsUpper(nextChar) && nextChar != '_')
                             {
-                                char nextChar = nameSpan[i + 1];
-                                if (!char.IsUpper(nextChar) && nextChar != '_')
-                                {
-                                    sb.Append('_');
-                                }
+                                sb.Append('_');
                             }
-                            break;
-                        case SnakeCaseState.Lower:
-                        case SnakeCaseState.NewWord:
-                            sb.Append('_');
-                            break;
-                    }
-                    sb.Append(char.ToLowerInvariant(nameSpan[i]));
-                    state = SnakeCaseState.Upper;
+                        }
+                        break;
+                    case SnakeCaseState.Lower:
+                    case SnakeCaseState.NewWord:
+                        sb.Append('_');
+                        break;
                 }
-                else if (nameSpan[i] == '_')
+                sb.Append(char.ToLowerInvariant(nameSpan[i]));
+                state = SnakeCaseState.Upper;
+            }
+            else if (nameSpan[i] == '_')
+            {
+                sb.Append('_');
+                state = SnakeCaseState.Start;
+            }
+            else
+            {
+                if (state == SnakeCaseState.NewWord)
                 {
                     sb.Append('_');
-                    state = SnakeCaseState.Start;
                 }
-                else
-                {
-                    if (state == SnakeCaseState.NewWord)
-                    {
-                        sb.Append('_');
-                    }
 
-                    sb.Append(nameSpan[i]);
-                    state = SnakeCaseState.Lower;
-                }
+                sb.Append(nameSpan[i]);
+                state = SnakeCaseState.Lower;
             }
-
-            return sb.ToString();
         }
+
+        return sb.ToString();
     }
 }

@@ -1,6 +1,6 @@
-namespace ro.TeamsMqttBridge;
+namespace Ro.Teams.MqttBridge;
 
-using MQTTnet.Client;
+using Ro.Teams.MqttBridge.Utils;
 using static Properties.Settings;
 
 public partial class SettingsForm : Form
@@ -34,55 +34,62 @@ public partial class SettingsForm : Form
             mqttServerLabel.ForeColor = SystemColors.ControlText;
         }
 
+        if (useAuthentication.Checked && string.IsNullOrEmpty(mqttUsername.Text))
+        {
+            mqttUsernameLabel.ForeColor = Color.Red;
+
+            return;
+        }
+        else
+        {
+            mqttUsernameLabel.ForeColor = SystemColors.ControlText;
+        }
+
+        if (useAuthentication.Checked && string.IsNullOrEmpty(mqttPassword.Text))
+        {
+            mqttPasswordLabel.ForeColor = Color.Red;
+
+            return;
+        }
+        else
+        {
+            mqttPasswordLabel.ForeColor = SystemColors.ControlText;
+        }
+
         bool mqttChanged = false;
 
         if (useAuthentication.Checked)
         {
-            if (string.IsNullOrEmpty(mqttUsername.Text))
+            var encryptedPassword = mqttPassword.Text.Encrypt();
+            if (mqttPassword.Text != "*********" && encryptedPassword != Default.MqttPassword)
             {
-                mqttUsernameLabel.ForeColor = Color.Red;
-
-                return;
-            }
-            else
-            {
-                mqttUsernameLabel.ForeColor = SystemColors.ControlText;
-            }
-
-            if (string.IsNullOrEmpty(mqttPassword.Text))
-            {
-                mqttPasswordLabel.ForeColor = Color.Red;
-
-                return;
-            }
-            else
-            {
-                mqttPasswordLabel.ForeColor = SystemColors.ControlText;
-            }
-
-            if (Default.MqttUsername != mqttUsername.Text)
-            {
-                Default.MqttUsername = mqttUsername.Text;
-                mqttChanged = true;
-            }
-
-            if (mqttPassword.Text != "Password")
-            {
-                Default.MqttPassword = mqttPassword.Text;
+                Default.MqttPassword = encryptedPassword;
                 mqttChanged = true;
             }
         }
         else
         {
-            Default.MqttPassword = string.Empty;
+            if (Default.MqttPassword != string.Empty)
+            {
+                Default.MqttPassword = string.Empty;
+                mqttChanged = true;
+            }
         }
 
-        var teamsChanded = false;
-
-        if (token != Guid.Empty && Default.TeamsToken != token.ToString())
+        if (Default.MqttUsername != mqttUsername.Text)
         {
-            Default.TeamsToken = token.ToString();
-            teamsChanded = true;
+            Default.MqttUsername = mqttUsername.Text;
+
+            mqttChanged = Default.MqttPassword != string.Empty;
+        }
+
+        var teamsChanged = false;
+
+        var encryptedToken = token.ToString().Encrypt();
+        if (token != Guid.Empty && Default.TeamsToken != encryptedToken)
+        {
+            Default.TeamsToken = encryptedToken;
+            teamsChanged = true;
         }
 
         if (Default.MqttUrl != uri.AbsoluteUri)
@@ -99,14 +106,14 @@ public partial class SettingsForm : Form
 
         Default.Save();
 
-        if (teamsChanded)
+        if (teamsChanged)
             Program.TryReconnectTeams();
 
         if (mqttChanged)
             Program.TryReconnectMqtt();
 
         Program.SendUpdate();
-        UpdateStatus();
+        UpdateForm();
     }
 
     private void SelectAuthentication(object sender, EventArgs e)
@@ -117,19 +124,29 @@ public partial class SettingsForm : Form
 
     private void SettingsForm_Load(object sender, EventArgs e)
     {
-        UpdateStatus();
+        UpdateForm();
+
+        Program.MqttConnected    += (_, _) => UpdateMqttStatus();
+        Program.MqttDisconnected += (_, _) => UpdateMqttStatus();
+        UpdateMqttStatus();
+
+        Program.TeamsConnected    += (_, _) => UpdateTeamsStatus();
+        Program.TeamsDisconnected += (_, _) => UpdateTeamsStatus();
+        UpdateTeamsStatus();
     }
 
-    private void UpdateStatus()
+    private void UpdateForm()
     {
-        if (!string.IsNullOrWhiteSpace(Default.MqttPassword) && !string.IsNullOrWhiteSpace(Default.MqttPassword))
+        mqttUsername.Text = Default.MqttUsername;
+
+        if (!string.IsNullOrWhiteSpace(Default.MqttPassword))
         {
+            mqttPassword.Text = "*********";
             useAuthentication.Checked = true;
-            mqttUsername.Text = Default.MqttUsername;
-            mqttPassword.Text = "Password";
         }
         else
         {
+            mqttPassword.Text = string.Empty;
             useAuthentication.Checked = false;
         }
 
@@ -141,21 +158,29 @@ public partial class SettingsForm : Form
         autodiscover.Checked = Default.Autodiscover;
 
         mqttServer.Text = Default.MqttUrl.ToString();
-
-        mqttUsername.Enabled = useAuthentication.Checked;
-        mqttPassword.Enabled = useAuthentication.Checked;
-
-        teamsStatus.Text = Program.TeamsClient is not null && Program.TeamsClient.IsConnected ? "Connected" : "Not Connected";
-        teamsStatus.ForeColor = Program.TeamsClient is not null && Program.TeamsClient.IsConnected ? Color.Green : Color.Red;
-
-        UpdateMqttStatus(Program.MqttClient is not null && Program.MqttClient.IsConnected);
     }
 
-    private void UpdateMqttStatus(bool status)
+    private void UpdateMqttStatus()
     {
-        mqttStatus.Text = status ? "Connected" : "Not Connected";
-        mqttStatus.ForeColor = status ? Color.Green : Color.Red;
+        var status = Program.MqttClient is not null && Program.MqttClient.IsConnected;
 
+        if (InvokeRequired)
+            Invoke(() =>
+            {
+                mqttStatus.Text = status ? "Connected" : "Not Connected";
+                mqttStatus.ForeColor = status ? Color.Green : Color.Red;
+            });
+        else
+            mqttStatus.Text = status ? "Connected" : "Not Connected";
+            mqttStatus.ForeColor = status ? Color.Green : Color.Red;
+    }
+
+    private void UpdateTeamsStatus()
+    {
+        var status = Program.TeamsClient is not null && Program.TeamsClient.IsConnected;
+
+        teamsStatus.Text = status ? "Connected" : "Not Connected";
+        teamsStatus.ForeColor = status ? Color.Green : Color.Red;
     }
 
     private void reconnect_Click(object sender, EventArgs e)

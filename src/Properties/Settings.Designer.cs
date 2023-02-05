@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ro.TeamsMqttBridge.Properties {
+namespace Ro.Teams.MqttBridge.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -92,6 +92,18 @@ namespace ro.TeamsMqttBridge.Properties {
             }
             set {
                 this["NodeName"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string SettingsVersion {
+            get {
+                return ((string)(this["SettingsVersion"]));
+            }
+            set {
+                this["SettingsVersion"] = value;
             }
         }
     }
