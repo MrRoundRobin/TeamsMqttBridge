@@ -2,6 +2,8 @@
 
 Using this tool, you can send Teams Meetings information to MQTT. With the Autodiscover option, these information will automatically be available in Home Assistant.
 
+<img width="210" alt="Home Assistant" src="https://user-images.githubusercontent.com/948771/216786978-a753ec26-f939-4a5f-aa40-7abcc41ea58d.png"> <img width="210" alt="Settings" src="https://user-images.githubusercontent.com/948771/216786857-dbdfeb36-07e2-4e9d-ae19-986b7d09a9c5.png">
+
 ## Supported features
 
 - Start and stop a meeting recording
