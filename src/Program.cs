@@ -4,6 +4,7 @@ using MQTTnet;
 using MQTTnet.Client;
 using MQTTnet.Extensions.ManagedClient;
 using MQTTnet.Server;
+using Ro.Teams.LocalApi;
 using Ro.Teams.MqttBridge.HomeAssistant;
 using Ro.Teams.MqttBridge.Utils;
 using System.Reflection;
@@ -14,7 +15,7 @@ using static Properties.Settings;
 
 internal static class Program
 {
-    internal static ro.TeamsLocalApi.Client? TeamsClient { get; set; }
+    internal static Client? TeamsClient { get; set; }
     internal static IManagedMqttClient? MqttClient { get; set; }
 
     internal static event EventHandler? MqttConnected;
@@ -59,13 +60,10 @@ internal static class Program
         if (string.IsNullOrEmpty(Default.TeamsToken))
             return;
 
-        TeamsClient = new(Default.TeamsToken.Decrypt(), false);
+        TeamsClient = new(Default.TeamsToken.Decrypt(), true);
         TeamsClient.PropertyChanged += (_, e) => SendUpdate(e.PropertyName);
         TeamsClient.Connected += (o,e) => TeamsConnected?.Invoke(o, e);
         TeamsClient.Disconnected += (o, e) => TeamsDisconnected?.Invoke(o, e);
-
-        TeamsClient.Connect();
-        TeamsClient.UpdateState();
     }
 
     internal async static void TryReconnectMqtt()
@@ -127,6 +125,7 @@ internal static class Program
             var options = new JsonSerializerOptions()
             {
                 PropertyNamingPolicy = new JsonSnakeCaseNamingPolicy(),
+                DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,
             };
 
             var device = new Device()
